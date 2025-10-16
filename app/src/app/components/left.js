@@ -3,7 +3,7 @@ import React from "react";
 
 const CeltrixTerminal = () => {
   return (
-    <div className="max-h-[50em] max-w-[38em] w-full bg-[#131313] rounded-[1em] shadow-[0_0.5em_2em_rgba(0,0,0,0.3)] overflow-hidden font-mono text-[0.95em] leading-[1.5] text-white">
+    <div className="max-h-[50em] max-w-[38em] w-full border border-[#383838] bg-[#0f0f0f] rounded-[1em] shadow-[0_0.5em_2em_rgba(0,0,0,0.3)] overflow-hidden font-mono text-[0.95em] leading-[1.5] text-white">
       {/* Top bar */}
       <div className="h-[2.5em] bg-[#2c2c2c] flex items-center px-[1em]">
         <div className="flex gap-[0.5em]">
