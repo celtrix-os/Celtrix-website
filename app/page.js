@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import "./globals.css";
-import logo from "../../public/celtrix-text-logo.png";
+import logo from "../public/celtrix-text-logo.png";
 import Left from "./components/left";
 import Github from "./components/github";
 import { useState } from "react";
