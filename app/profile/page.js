@@ -1,6 +1,6 @@
 "use client";
 
-import ProfileContent from "../components/ProfileContent";
+import ProfileContent from "./ProfileContent";
 
 export default function Profile() {
   
