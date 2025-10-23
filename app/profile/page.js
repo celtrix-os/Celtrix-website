@@ -1,6 +1,5 @@
+"use client";
 export const dynamic = "force-dynamic";
-"use client";
-"use client";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import Navbar from "../components/navbar";
