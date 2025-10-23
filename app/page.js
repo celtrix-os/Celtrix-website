@@ -5,10 +5,21 @@ import "./globals.css";
 import logo from "../public/celtrix-text-logo.png";
 import Left from "./components/left";
 import Github from "./components/github";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import Navbar from "./components/navbar";
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
+  const router = useRouter();
+  
+  useEffect(() => {
+    // Check if user is logged in (has a profile in localStorage)
+    const profile = typeof window !== 'undefined' ? localStorage.getItem('githubProfile') : null;
+    if (profile) {
+      router.push(`/profile?profile=${encodeURIComponent(profile)}`);
+    }
+  }, [router]);
 
   const [open, setOpen] = useState(false);
 
@@ -16,19 +27,8 @@ export default function Home() {
     <div className="flex flex-col p-4 sm:p-6 md:p-8 lg:p-10 bangers-regular gap-16 md:gap-24 lg:gap-[120px]">
       {/* nav-section */}
       <div className="w-full md:flex md:flex-row lg:flex lg:flex-row fixed-top border-1 border-gray-800 p-2 z-50 rounded-2xl">
-        <nav className="flex flex-row md:flex md:flex-row lg:flex lg:flex-row justify-between items-center gap-4 sm:gap-0 w-full">
-          <button className="flex items-center gap-0 tracking-wider text-green-500 cursor-pointer text-2xl sm:text-3xl md:text-4xl whitespace-nowrap">
-            <Image src={logo} alt="Celtrix" width={160} height={150} />
-          </button>
-          <button onClick={() => {setOpen(!open)}} className="text-green-500 text-2xl md:hidden">𓃑</button>
-        </nav>
-          
-        <ul className={`${open ? "flex flex-col mt-2" : "hidden"} md:flex md:flex-row items-center justify-center gap-3 sm:gap-4 md:gap-6 text-lg sm:text-xl md:text-2xl`}>
-          <button className="hover:text-green-500 transition-colors cursor-pointer">Home</button>
-          <button className="hover:text-green-500 transition-colors cursor-pointer">About</button>
-          <a href="https://github.com/celtrix-os/Celtrix" className="cursor-pointer"><Github/></a>
-        </ul>
-         
+        
+         <Navbar/>
       </div>
 
       {/* Hero Section 1 */}
@@ -37,15 +37,11 @@ export default function Home() {
         {/* Left side - Hero content */}
         <div className="flex-1 flex flex-col gap-6 md:gap-8 lg:gap-10 max-w-4xl">
           <div className="text-4xl md:mt-8 sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl leading-tight text-center sm:text-left">
-            <h1>Setup Web apps in <span className="text-green-500"> seconds,</span> Not in <span className="text-red-500">hours</span></h1>
-            
+            <h1>Setup Web apps in <span className="text-green-500"> seconds,</span> Not in <span className="text-red-500">hours</span></h1>  
           </div>
-          
 
-          
           <p className="text-base sm:text-lg md:text-xl lg:text-2xl w-full tracking-wide leading-relaxed hidden sm:block">
             <span className="text-green-500">Celtrix</span> – an open-source scaffolding tool that helps you <span className="text-fuchsia-400">set up full-stack projects</span> instantly with one command. Whether it&apos;s <span className="text-green-500">MERN</span>, <span className="text-red-500">MEAN</span>, <span className="text-blue-500">Nextjs</span>, or other popular stacks, you can scaffold everything with just <span className="text-yellow-500">one command.</span>
-
           </p>
           
           <div className="block sm:hidden">
