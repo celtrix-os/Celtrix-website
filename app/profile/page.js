@@ -1,9 +1,10 @@
 "use client";
-export const dynamic = "force-dynamic";
+
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import Navbar from "../components/navbar";
 import Link from "next/link";
+import { Suspense } from "react";
 
 export default function Profile() {
   const searchParams = useSearchParams();
@@ -25,7 +26,7 @@ export default function Profile() {
   };
 
   return (
-    <div className="flex bangers-regular flex-col items-center p-8 gap-12 md:gap-44">
+    <Suspense className="flex bangers-regular flex-col items-center p-8 gap-12 md:gap-44">
       <div className="w-full md:flex md:flex-row lg:flex lg:flex-row fixed-top border-1 border-gray-800 p-2 z-50 rounded-2xl">        
         <Navbar/>
       </div>
@@ -60,6 +61,6 @@ export default function Profile() {
 
       
       
-    </div>
+    </Suspense>
   );
 }
