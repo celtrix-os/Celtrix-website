@@ -6,13 +6,13 @@ import logo from "../public/celtrix-text-logo.png";
 import Left from "./components/left";
 import Github from "./components/github";
 import { useState } from "react";
+import Link from "next/link";
 
 export default function Home() {
 
   const [open, setOpen] = useState(false);
 
   return (
-
     <div className="flex flex-col p-4 sm:p-6 md:p-8 lg:p-10 bangers-regular gap-16 md:gap-24 lg:gap-[120px]">
       {/* nav-section */}
       <div className="w-full md:flex md:flex-row lg:flex lg:flex-row fixed-top border-1 border-gray-800 p-2 z-50 rounded-2xl">
@@ -55,9 +55,11 @@ export default function Home() {
           </div>
           
           <div className="w-full flex justify-center sm:justify-start mt-2">
-            <button className="bg-green-500 hover:bg-green-600 text-black py-3 px-8 cursor-pointer rounded-full w-full sm:w-auto tracking-wide text-lg md:text-xl transition-colors duration-300 transform hover:scale-105 max-w-xs sm:max-w-none">
-              Get Started
-            </button>
+            <a
+              href="/api/auth/github"
+              className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-black py-3 px-8 cursor-pointer rounded-full w-full sm:w-auto tracking-wide text-lg md:text-xl transition-colors duration-300 transform hover:scale-105 max-w-xs sm:max-w-none">
+              Get Started with GitHub
+          </a>
           </div>
         </div>
 
@@ -73,14 +75,6 @@ export default function Home() {
       {/* Hero Section 2*/}
       <div className="flex mb-1.5 flex-col lg:flex-row gap-8 md:gap-10 lg:gap-16 xl:gap-24 w-full justify-center">
         <h1 className="text-4xl md:mt-8 sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl leading-tight text-center sm:text-left">One command = Setup <span className="text-green-500">frontend, </span><span className="text-red-500">backend, </span><span className="text-yellow-500">DB</span></h1>
-      </div>
-
-      {/* Hero Section 3*/}
-      <div>
-        <div>
-          <h1></h1>
-        </div>
-        <div></div>
       </div>
     </div>
   );
