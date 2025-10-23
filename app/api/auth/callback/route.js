@@ -59,5 +59,5 @@ export async function GET(request) {
   };
 
   // 4️⃣ Display it as JSON
-  return Response.redirect(`http://localhost:3000/profile?profile=${JSON.stringify(profile)}`)
+  return Response.redirect(`${process.env.SITE_URL}/profile?profile=${JSON.stringify(profile)}`)
 }
