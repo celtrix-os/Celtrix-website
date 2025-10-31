@@ -24,7 +24,7 @@ export default function Home() {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="flex flex-col p-4 sm:p-6 md:p-8 lg:p-10 bangers-regular gap-16 md:gap-24 lg:gap-[120px]">
+    <div className="flex flex-col p-4 sm:p-6 md:p-8 lg:p-10 bangers-regular gap-8 md:gap-12 lg:gap-16">
       {/* nav-section */}
       <div className="w-full md:flex md:flex-row lg:flex lg:flex-row fixed-top border-1 border-gray-800 p-2 z-50 rounded-2xl">
         
@@ -33,7 +33,7 @@ export default function Home() {
 
       {/* Hero Section 1 */}
 
-      <div className="flex flex-col lg:flex-row gap-8 md:gap-10 lg:gap-16 xl:gap-24 w-full justify-center">
+      <div className="flex flex-col justify-center align-center lg:flex-row gap-8 md:gap-10 lg:gap-16 xl:gap-24 ">
         {/* Left side - Hero content */}
         <div className="flex-1 flex flex-col gap-6 md:gap-8 lg:gap-10 max-w-4xl">
           <div className="text-4xl md:mt-8 sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl leading-tight text-center sm:text-left">
@@ -61,7 +61,7 @@ export default function Home() {
 
         {/* Right side - Terminal */}
         <div className="flex-1 flex items-center justify-center lg:justify-end">
-          <div className="w-full max-w-2xl">
+          <div className=" max-w-3xl">
             <Left />
           </div>
         </div>
