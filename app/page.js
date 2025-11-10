@@ -52,7 +52,7 @@ export default function Home() {
           </div>
           
           <div className="w-full flex justify-center sm:justify-start mt-2">
-            <a
+            <a href="/api/auth/github"
               className="flex items-center justify-center gap-2 text-black py-3 px-2.5 cursor-pointer rounded-full w-full sm:w-auto tracking-wide text-lg md:text-xl transition-colors duration-300 transform  max-w-xs sm:max-w-none">
 
           <Button />
