@@ -26,8 +26,8 @@ function ProfileContent() {
   };
 
   return (
-    <div className="flex bangers-regular flex-col items-center p-8 gap-12 md:gap-44">
-      <div className="w-full md:flex md:flex-row lg:flex lg:flex-row fixed-top border-1 border-gray-800 p-2 z-50 rounded-2xl">        
+    <div className="flex flex-col p-4 sm:p-6 md:p-8 lg:p-10 bangers-regular gap-8 md:gap-12 lg:gap-16">
+      <div className="w-full md:flex md:flex-row lg:flex lg:flex-row fixed-top border-1 border-gray-800 p-2 z-50 rounded-[8px]">        
         <Navbar/>
       </div>
 
