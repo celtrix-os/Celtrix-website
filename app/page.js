@@ -9,6 +9,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Navbar from "./components/navbar";
 import { useRouter } from 'next/navigation';
+import Button from './components/getstarted'; 
+import FindUsHere from './components/findushere';
 
 export default function Home() {
   const router = useRouter();
@@ -27,7 +29,6 @@ export default function Home() {
     <div className="flex flex-col p-4 sm:p-6 md:p-8 lg:p-10 bangers-regular gap-8 md:gap-12 lg:gap-16">
       {/* nav-section */}
       <div className="w-full md:flex md:flex-row lg:flex lg:flex-row fixed-top border-1 border-gray-800 p-2 z-50 rounded-2xl">
-        
          <Navbar/>
       </div>
 
@@ -52,15 +53,15 @@ export default function Home() {
           
           <div className="w-full flex justify-center sm:justify-start mt-2">
             <a
-              href="/api/auth/github"
-              className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-black py-3 px-8 cursor-pointer rounded-full w-full sm:w-auto tracking-wide text-lg md:text-xl transition-colors duration-300 transform hover:scale-105 max-w-xs sm:max-w-none">
-              Get Started with GitHub
+              className="flex items-center justify-center gap-2 text-black py-3 px-2.5 cursor-pointer rounded-full w-full sm:w-auto tracking-wide text-lg md:text-xl transition-colors duration-300 transform  max-w-xs sm:max-w-none">
+
+          <Button />
           </a>
           </div>
         </div>
 
         {/* Right side - Terminal */}
-        <div className="flex-1 flex items-center justify-center lg:justify-end">
+        <div className="hidden sm:flex flex-1 items-center justify-center lg:justify-end">
           <div className=" max-w-3xl">
             <Left />
           </div>
@@ -69,9 +70,26 @@ export default function Home() {
       </div>
 
       {/* Hero Section 2*/}
-      <div className="flex mb-1.5 flex-col lg:flex-row gap-8 md:gap-10 lg:gap-16 xl:gap-24 w-full justify-center">
+      <div className="flex mb-1.5 flex-col lg:flex-row items-center gap-8 md:gap-10 lg:gap-16 xl:gap-24 w-full justify-center">
         <h1 className="text-4xl md:mt-8 sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl leading-tight text-center sm:text-left">One command = Setup <span className="text-green-500">frontend, </span><span className="text-red-500">backend, </span><span className="text-yellow-500">DB</span></h1>
       </div>
+
+      {/* <hr className="text-gray-500"/> */}
+      
+      <div className="flex sm:flex-row flex-col justify-around items-center gap-6 p-4 bg-green-500 sm:gap-20">
+        <div className="text-center items-center">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl xl:text-9xl lg:text-8xl custom-text-border text-black">Find us here</h1>
+          <p className="text-1xl sm:text-3xl text-black">Connect with us and suggest ideas !</p>
+        </div>
+
+        <div>
+          <FindUsHere />
+        </div>
+      </div>
+
+      {/* <hr className="text-gray-500"/> */}
+
+      
     </div>
   );
 }
