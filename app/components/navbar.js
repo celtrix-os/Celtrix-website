@@ -19,7 +19,7 @@ export default function Navbar() {
                 
             <ul className={`${open ? "flex flex-col mt-2" : "hidden"} md:flex md:flex-row items-center justify-center gap-3 sm:gap-4 md:gap-6 text-lg sm:text-xl md:text-2xl`}>
                 <Link href="/" className="hover:text-green-500 transition-colors tracking-wide cursor-pointer underline">Home</Link>
-                <Link href="/api/auth/github" className="hover:text-red-500 transition-colors tracking-wide cursor-pointer underline">Login</Link>
+                <Link href="/api/auth/github" className="hover:text-blue-500 transition-colors tracking-wide cursor-pointer underline">Login</Link>
                 <Link href="https://github.com/celtrix-os/Celtrix" className="cursor-pointer"><Github/></Link>
             </ul>
         </>
