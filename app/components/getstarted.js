@@ -5,7 +5,7 @@ const Button = () => {
   return (
     <StyledWrapper className='joe'>
       <button className="cta">
-        <span className="span text-2xl sm:text-3xl">Get started with <span className='underline'>Github</span></span>
+        <span className="span text-[20px] sm:text-3xl">Get started with <span className='underline'>Github</span></span>
         
       </button>
     </StyledWrapper>
