@@ -26,7 +26,7 @@ const StyledWrapper = styled.div`
     color:black;
     transition: 0.3s;
    box-shadow:
-    4px 4px 0px blue,        /* First shadow (main outline) */
+    4px 4px 0px #3B82F6,        /* First shadow (main outline) */
     8px 8px 0px red; /* Second shadow (blurred soft shadow) */
   
     transform: skewX(-15deg);
@@ -41,7 +41,7 @@ const StyledWrapper = styled.div`
   .cta:hover {
     transition: 0.3s;
    box-shadow:
-    7px 7px 0px blue,        /* First shadow (main outline) */
+    7px 7px 0px #3B82F6,        /* First shadow (main outline) */
     13px 13px 0px red; /* Second shadow (blurred soft shadow) */
   }
 
