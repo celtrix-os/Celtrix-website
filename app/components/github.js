@@ -1,8 +1,34 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Button = () => {
+  const [stars, setStars] = useState('100+');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStars = async () => {
+      try {
+        const response = await fetch('https://api.github.com/repos/celtrix-os/Celtrix');
+        if (response.ok) {
+          const data = await response.json();
+          const starCount = data.stargazers_count;
+          if (starCount >= 1000) {
+            setStars(`${(starCount / 1000).toFixed(1)}k`);
+          } else {
+            setStars(starCount.toString());
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch GitHub stars:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStars();
+  }, []);
+
   return (
-    <button href="#" className="flex overflow-hidden border-1 items-center text-sm font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-black text-white shadow hover:bg-black/90 h-9 px-4 py-2 max-w-52 whitespace-pre md:flex group relative w-full justify-center gap-2 rounded-md transition-all duration-300 ease-out hover:ring-2 hover:ring-black hover:ring-offset-2">
+    <a href="https://github.com/celtrix-os/Celtrix" target="_blank" rel="noopener noreferrer" className="flex overflow-hidden border items-center text-sm border-gray-500 font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-black text-white shadow hover:bg-black/90 h-9 px-4 py-2 max-w-52 whitespace-pre md:flex group relative w-full justify-center gap-2 rounded-md transition-all duration-300 ease-out hover:ring-2 hover:ring-black hover:ring-offset-2">
       <span className="absolute right-0 -mt-12 h-32 w-8 translate-x-12 rotate-12 bg-white opacity-10 transition-all duration-1000 ease-out group-hover:-translate-x-40" />
       <div className="flex items-center">
         <svg className="w-4 h-4 fill-current" viewBox="0 0 438.549 438.549">
@@ -11,12 +37,14 @@ const Button = () => {
         <span className="ml-1 mt-0.5 text-green-500"> Celtrix</span>
       </div>
       <div className="ml-2 flex items-center gap-1 text-sm md:flex">
-        <svg className="w-4 h-4 text-gray-500 transition-all duration-300 group-hover:text-yellow-300" data-slot="icon" aria-hidden="true" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <svg className="w-6 h-6 text-gray-500 transition-all duration-300 group-hover:text-yellow-300" data-slot="icon" aria-hidden="true" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path clipRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" fillRule="evenodd" />
         </svg>
-        <span className="inline-block tabular-nums tracking-widest  text-white">100+</span>
+        <span className="inline-block tabular-nums tracking-widest text-white text-2xl">
+          {loading ? '...' : stars}
+        </span>
       </div>
-    </button>
+    </a>
   );
 }
 
