@@ -44,27 +44,47 @@ export async function GET(request) {
     const userData = await userResponse.json();
     const emails = await emailResponse.json();
     const primaryEmail = emails.find((e) => e.primary)?.email || null;
+      
 
     const profile = {
       name: userData.name || userData.login,
       avatar: userData.avatar_url,
       username: userData.login,
       email: primaryEmail,
+      access_token: accessToken,
     };
 
     console.log("👤 GitHub Profile:", profile);
+    console.log("🔑 Access Token:", accessToken ? "Present" : "Missing");
+    console.log("🔑 Profile Access Token:", profile.access_token ? "Present" : "Missing");
 
     // 3️⃣ Save to DB
     await connectToDB();
 
-    if (!profile.email) console.log("⚠️ GitHub user has no public email");
+    if (!profile.email) console.log(" GitHub user has no public email");
 
     const existingUser = await User.findOne({ email: profile.email });
     if (!existingUser) {
-      await User.create(profile);
+      console.log("Creating new user with data:", JSON.stringify(profile, null, 2));
+      const newUser = await User.create(profile);
+      console.log("New user created:", JSON.stringify(newUser, null, 2));
       console.log("✅ New user created:", profile.email);
+      console.log("🔑 Saved Access Token:", newUser.access_token ? "Present" : "Missing");
     } else {
-      console.log("ℹ️ User already exists:", profile.email);
+      console.log("ℹ️ Existing user found:", existingUser.email);
+      console.log("🔑 Current DB Access Token:", existingUser.access_token ? "Present" : "Missing");
+      
+      console.log("Updating with access token:", profile.access_token);
+      const updateResult = await User.updateOne(
+        { email: profile.email },
+        { $set: { access_token: profile.access_token } }
+      );
+      console.log("🔑 Update Result:", updateResult);
+      
+      // Verify the token was saved
+      const updatedUser = await User.findOne({ email: profile.email });
+      console.log("Updated user data:", JSON.stringify(updatedUser, null, 2));
+      console.log("🔑 Final DB Access Token:", updatedUser.access_token ? "Present" : "Missing");
     }
 
     return Response.redirect(

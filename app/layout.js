@@ -28,6 +28,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${bangers.variable} antialiased`}
       >
