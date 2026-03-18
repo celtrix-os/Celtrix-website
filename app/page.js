@@ -11,6 +11,7 @@ import Navbar from "./components/navbar";
 import { useRouter } from 'next/navigation';
 import Button from './components/getstarted'; 
 import FindUsHere from './components/findushere';
+import Script from "next/script";
 
 export default function Home() {
   const router = useRouter();
@@ -26,9 +27,22 @@ export default function Home() {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="flex flex-col p-4 sm:p-6 md:p-8 lg:p-10 bangers-regular gap-8 md:gap-12 lg:gap-16">
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Grid Background */}
+      <div className="fixed inset-0 -z-10">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `
+            linear-gradient(rgba(156, 163, 175, 0.15) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(156, 163, 175, 0.15) 1px, transparent 1px)
+          `,
+          backgroundSize: '50px 50px',
+          backgroundPosition: '0 0, 25px 25px'
+        }}></div>
+      </div>
+      
+      <div className="flex flex-col p-4 sm:p-6 md:p-8 lg:p-10 bangers-regular gap-8 md:gap-12 lg:gap-16 relative z-10">
       {/* nav-section */}
-      <div className="w-full md:flex md:flex-row bg-black/60 backdrop-blur-lg lg:flex lg:flex-row fixed-top border-1 border-gray-900 shadow-gray-800 shadow-2xl p-2 z-50 rounded-[8px]">
+      <div className="w-full md:flex md:flex-row bg-black/60 backdrop-blur-lg lg:flex lg:flex-row fixed-top border-1 border-gray-900 shadow-gray-800  p-2 z-50 rounded-[8px]">
          <Navbar/>
       </div>
 
@@ -75,7 +89,7 @@ export default function Home() {
       {/* <hr className="text-gray-500"/> */}
 
       {/* Community Section */}
-      <div className="flex flex-col items-center gap-12 p-8 lg:p-12 backdrop-blur-xl rounded-3xl border border-gray-700/50 shadow-2xl">
+      <div className="flex flex-col items-center gap-12 p-8 lg:p-12 backdrop-blur-xl rounded-3xl border bg-transparent border-gray-700/50 shadow-2xl">
         {/* Header */}
         <div className="text-center max-w-4xl">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-black border border-blue-500/30 rounded-full mb-6">
@@ -91,29 +105,60 @@ export default function Home() {
         </div>
         
         {/* Tweet Container */}
-        <div className="w-full max-w-4xl flex justify-center">
-          <div className="relative">
-            {/* Glow effect */}
-            {/* <div className="absolute inset-0 bg-linear-to-r  rounded-2xl blur-xl"></div> */}
-            
-            {/* Tweet */}
-            {/* <div className="relative bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-6"> */}
-              <blockquote className="twitter-tweet" data-width="650" data-theme="dark" data-align="center">
-                <p lang="en" dir="ltr">
-                  Celtrix lets you spin up full-stack apps in seconds.<br/><br/>
-                  One command.<br/>
-                  Frontend + backend + database ready.<br/><br/>
-                  No boilerplate.<br/>
-                  No manual setup.<br/><br/>
-                  Works with stacks like MERN, MEAN, Next.js and more.<br/><br/>
-                  Perfect if you want to start building instead of configuring. <a href="https://t.co/cs5qtgxh2C">pic.twitter.com/cs5qtgxh2C</a>
-                </p>
-                &mdash; GitHub Projects Community (@GithubProjects)
-                <a href="https://twitter.com/GithubProjects/status/2032804558632792290?ref_src=twsrc%5Etfw">March 14, 2026</a>
-              </blockquote>
-            {/* </div> */}
-          </div>
-        </div>
+        <div className="w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-start justify-center">
+
+  {/* Twitter */}
+  <div className="flex justify-center">
+    <div className="w-full max-w-[520px]">
+      <blockquote
+        className="twitter-tweet"
+        data-theme="dark"
+        data-align="center"
+      >
+        <p lang="en" dir="ltr">
+          Celtrix lets you spin up full-stack apps in seconds.<br/><br/>
+          One command.<br/>
+          Frontend + backend + database ready.<br/><br/>
+          No boilerplate.<br/>
+          No manual setup.<br/><br/>
+          Works with stacks like MERN, MEAN, Next.js and more.<br/><br/>
+          Perfect if you want to start building instead of configuring.
+        </p>
+        &mdash; GitHub Projects Community (@GithubProjects)
+        <a href="https://twitter.com/GithubProjects/status/2032804558632792290">
+          March 14, 2026
+        </a>
+      </blockquote>
+    </div>
+  </div>
+
+  {/* Threads */}
+  <div className="flex justify-center">
+    <div className="w-full max-w-[520px]">
+      <blockquote
+        className="text-post-media"
+        data-text-post-permalink="https://www.threads.com/@githubprojects/post/DV3aWsIFKAz"
+        data-text-post-version="0"
+        id="ig-tp-DV3aWsIFKAz"
+      >
+        <a
+          href="https://www.threads.com/@githubprojects/post/DV3aWsIFKAz"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          View on Threads
+        </a>
+      </blockquote>
+
+      <Script
+        async
+        src="https://www.threads.com/embed.js"
+        strategy="lazyOnload"
+      />
+    </div>
+  </div>
+
+</div>
         
         {/* Bottom accent */}
         <div className="flex items-center gap-8 text-gray-500 text-sm">
@@ -168,6 +213,7 @@ export default function Home() {
           &copy; 2026 Celtrix. All rights reserved.
         </div>
       </footer>
+      </div>
     </div>
   );
 }
