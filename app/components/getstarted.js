@@ -1,11 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 const Button = () => {
+  const [copied, setCopied] = useState(false);
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText('npx celtrix');
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
     <StyledWrapper className='joe'>
-      <button className="cta">
-        <span className="span text-[20px] sm:text-3xl">Get started with <span className='underline'>Github</span></span>
+      <button className="cta" onClick={copyToClipboard}>
+        
+        <span 
+          className="span text-[20px] sm:text-3xl"
+          dangerouslySetInnerHTML={{
+            __html: copied ? 'Copied!' : '  <span class="underline font-mono"> npx celtrix@latest</span> '
+          }}
+        />
         
       </button>
     </StyledWrapper>

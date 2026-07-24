@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation';
 import Button from './components/getstarted'; 
 import FindUsHere from './components/findushere';
 import Script from "next/script";
+import TechShowcase from './components/techshowcase';
 
 export default function Home() {
   const router = useRouter();
@@ -42,7 +43,7 @@ export default function Home() {
       
       <div className="flex flex-col p-4 sm:p-6 md:p-8 lg:p-10 bangers-regular gap-8 md:gap-12 lg:gap-16 relative z-10">
       {/* nav-section */}
-      <div className="w-full md:flex md:flex-row bg-black/60 backdrop-blur-lg lg:flex lg:flex-row fixed-top border-1 border-gray-900 shadow-gray-800  p-2 z-50 rounded-[8px]">
+      <div className="w-full md:flex md:flex-row bg-black/60 backdrop-blur-lg lg:flex lg:flex-row fixed-top border border-gray-900 shadow-gray-800  p-2 z-50 rounded-[8px]">
          <Navbar/>
       </div>
 
@@ -52,25 +53,23 @@ export default function Home() {
         {/* Left side - Hero content */}
         <div className="flex-1 flex flex-col gap-6 md:gap-8 lg:gap-10 max-w-4xl">
           <div className="text-4xl md:mt-8 sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl leading-tight text-center sm:text-left">
-            <h1>Setup Web apps in <span className="text-green-500"> seconds,</span> Not in <span className="text-red-500">hours</span></h1>  
+            <h1>Setup <span className="text-green-500">fully customized</span> web apps within <span className="text-red-500">minutes</span></h1>  
           </div>
 
           <p className="text-base sm:text-lg md:text-xl lg:text-2xl w-full tracking-wide leading-relaxed hidden sm:block">
-            <span className="text-green-500">Celtrix</span> – an open-source scaffolding tool that helps you <span className="text-fuchsia-400">set up full-stack projects</span> instantly with one command. Whether it&apos;s <span className="text-green-500">MERN</span>, <span className="text-red-500">MEAN</span>, <span className="text-blue-500">Nextjs</span>, or other popular stacks, you can scaffold everything with just <span className="text-yellow-500">one command.</span>
+            <span className="text-green-500">Celtrix</span> is a modern web app scaffolder that lets you choose your <span className="text-fuchsia-400">frontend, backend, database, runtime, ORM, API layer, authentication</span> and more - all in one place. No rigid templates, no unnecessary boilerplate - just your stack, your way.
           </p>
           
           <div className="block sm:hidden">
             <p className="text-base text-center sm:text-lg md:text-xl lg:text-2xl w-full tracking-wide leading-relaxed">
-              <span className="text-green-500">Celtrix</span> – an <span className="text-red-400">open-source</span> scaffolding tool that helps you <span className="text-fuchsia-400">set up full-stack projects</span> instantly with <span className="text-yellow-500">one command.</span>
+              <span className="text-green-500">Celtrix</span> - modern web app scaffolder. Choose your stack, spin up apps with <span className="text-yellow-500">one command.</span>
             </p>
           </div>
           
           <div className="w-full flex justify-center sm:justify-start mt-2">
-            <a href="/api/auth/github"
-              className="flex items-center justify-center gap-2 text-black py-3 px-2.5 cursor-pointer rounded-full w-full sm:w-auto tracking-wide text-lg md:text-xl transition-colors duration-300 transform  max-w-xs sm:max-w-none">
-
+            <div className="flex items-center justify-center gap-2 text-black py-3 px-2.5 cursor-pointer rounded-full w-full sm:w-auto tracking-wide text-lg md:text-xl transition-colors duration-300 transform  max-w-xs sm:max-w-none">
           <Button />
-          </a>
+          </div>
           </div>
         </div>
 
@@ -81,6 +80,23 @@ export default function Home() {
           </div>
         </div>
 
+      </div>
+
+      {/* Tech Showcase Section */}
+      <div className="flex flex-col items-center gap-10 p-10 lg:p-16 backdrop-blur-xl rounded-3xl border bg-linear-to-b from-gray-900/50 to-transparent border-gray-700/50 shadow-2xl">
+        <div className="text-center max-w-4xl">
+          <div className="inline-flex items-center gap-3 px-5 py-2.5 bg-black/80 border border-green-500/40 rounded-full mb-8 shadow-lg shadow-green-500/20">
+            <span className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></span>
+            <span className="text-green-400 text-base font-semibold">Technology Stack</span>
+          </div>
+          <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-wide mb-6">
+            Choose Your <span className="text-green-500">Perfect Stack</span>
+          </h2>
+          <p className="text-gray-300 text-xl max-w-3xl mx-auto leading-relaxed">
+            Select from a wide range of modern technologies to build your application exactly how you want it
+          </p>
+        </div>
+        <TechShowcase />
       </div>
 
       {/* Hero Section 2*/}

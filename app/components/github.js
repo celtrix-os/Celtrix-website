@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 const Button = () => {
-  const [stars, setStars] = useState('100+');
+  const [stars, setStars] = useState('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
