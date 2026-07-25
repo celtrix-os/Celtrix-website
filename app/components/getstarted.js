@@ -5,7 +5,7 @@ const Button = () => {
   const [copied, setCopied] = useState(false);
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText('npx celtrix');
+    navigator.clipboard.writeText('npx celtrix@latest');
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
