@@ -31,3 +31,33 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@keyframes fabric-flow {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes fabric-drift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(15%, 10%) scale(1.15); }
+}
+
+.fabric-strand {
+  animation: fabric-flow linear infinite;
+}
+
+.fabric-glow {
+  animation: fabric-drift 14s ease-in-out infinite;
+}
+
+.fabric-glow-alt {
+  animation-delay: -7s;
+  animation-direction: reverse;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fabric-strand,
+  .fabric-glow {
+    animation: none;
+  }
+}
