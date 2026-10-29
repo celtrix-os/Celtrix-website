@@ -165,7 +165,7 @@ const TechShowcase = () => {
       <div className="flex justify-center mt-8">
         <Link
           href="/builder"
-          className="bangers-regular px-8 py-3 rounded-xl bg-green-500 text-black text-2xl tracking-wider transition-all hover:bg-green-400 hover:shadow-[0_8px_30px_-8px_rgba(34,197,94,0.7)]"
+          className="bangers-regular px-8 py-3 rounded-xl bg-green-400 text-black text-2xl tracking-wider transition-all hover:bg-green-300 hover:shadow-[0_8px_30px_-8px_rgba(74,222,128,0.6)]"
         >
           Start building
         </Link>

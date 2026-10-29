@@ -51,7 +51,7 @@ export const QuickStart = () => {
                 onClick={() => { setManager(pm); setCopied(false); }}
                 className={`px-3 py-1 rounded-md text-xs sm:text-sm transition-colors cursor-pointer ${
                   manager === pm
-                    ? 'bg-green-500 text-black'
+                    ? 'bg-green-400 text-black'
                     : 'text-gray-400 hover:text-white'
                 }`}
               >
