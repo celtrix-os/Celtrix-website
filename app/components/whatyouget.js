@@ -58,28 +58,131 @@ const points = [
   },
 ];
 
-const tree = `my-app/
-├── apps/
-│   ├── api/            # Express, Hono or Fastify API
-│   │   └── src/
-│   │       ├── env.ts      # loads the root .env
-│   │       └── index.ts    # /api/health and /api/users
-│   └── web/            # Vite + React app
-│       ├── src/
-│       │   ├── App.tsx     # live status screen
-│       │   └── lib/api.ts  # typed client for the API
-│       └── vite.config.ts  # proxies /api to the API
-├── packages/
-│   ├── database/       # @repo/database, shared by the API
-│   │   ├── prisma/schema.prisma
-│   │   └── src/index.ts
-│   └── tsconfig/
-├── .env.example        # every variable the code reads
-├── docker-compose.yml  # only with the Docker provider
-├── CELTRIX_SETUP.md    # how to set up and run this project
-├── celtrix.config.json # the stack you chose
-├── turbo.json
-└── package.json        # dev, build and db:* scripts`;
+// Each top-level area gets its own accent, inherited by everything inside it.
+const neutral = { text: 'text-gray-100', dot: 'bg-gray-400' };
+
+const accents = {
+  api: { text: 'text-green-400', dot: 'bg-green-400', chip: 'border-green-500/40 bg-green-500/10 text-green-300', label: 'API' },
+  web: { text: 'text-sky-400', dot: 'bg-sky-400', chip: 'border-sky-500/40 bg-sky-500/10 text-sky-300', label: 'Web app' },
+  pkg: { text: 'text-purple-400', dot: 'bg-purple-400', chip: 'border-purple-500/40 bg-purple-500/10 text-purple-300', label: 'Shared packages' },
+  root: { text: 'text-amber-400', dot: 'bg-amber-400', chip: 'border-amber-500/40 bg-amber-500/10 text-amber-300', label: 'Config & docs' },
+};
+
+const extColors = {
+  ts: 'text-sky-300',
+  tsx: 'text-cyan-300',
+  json: 'text-amber-300',
+  md: 'text-gray-100',
+  yml: 'text-pink-300',
+  prisma: 'text-indigo-300',
+  env: 'text-yellow-300',
+};
+
+const tree = {
+  name: 'my-app',
+  children: [
+    {
+      name: 'apps',
+      children: [
+        {
+          name: 'api', accent: 'api', note: 'Express, Hono or Fastify API',
+          children: [
+            { name: 'src', children: [
+              { name: 'env.ts', note: 'loads the root .env' },
+              { name: 'index.ts', note: '/api/health and /api/users' },
+            ] },
+          ],
+        },
+        {
+          name: 'web', accent: 'web', note: 'Vite + React app',
+          children: [
+            { name: 'src', children: [
+              { name: 'App.tsx', note: 'live status screen' },
+              { name: 'lib/api.ts', note: 'typed client for the API' },
+            ] },
+            { name: 'vite.config.ts', note: 'proxies /api to the API' },
+          ],
+        },
+      ],
+    },
+    {
+      name: 'packages', accent: 'pkg',
+      children: [
+        { name: 'database', note: '@repo/database, shared by the API', children: [
+          { name: 'prisma/schema.prisma' },
+          { name: 'src/index.ts' },
+        ] },
+        { name: 'tsconfig', children: [] },
+      ],
+    },
+    { name: '.env.example', accent: 'root', note: 'every variable the code reads' },
+    { name: 'docker-compose.yml', accent: 'root', note: 'only with the Docker provider' },
+    { name: 'CELTRIX_SETUP.md', accent: 'root', note: 'how to set up and run this project' },
+    { name: 'celtrix.config.json', accent: 'root', note: 'the stack you chose' },
+    { name: 'turbo.json', accent: 'root' },
+    { name: 'package.json', accent: 'root', note: 'dev, build and db:* scripts' },
+  ],
+};
+
+// Flattens the tree into rows, building the box-drawing guide for each one.
+const flatten = (nodes, prefix = '', accent) =>
+  nodes.flatMap((node, i) => {
+    const last = i === nodes.length - 1;
+    const rowAccent = node.accent || accent;
+    const row = { ...node, accent: rowAccent, guide: prefix + (last ? '└── ' : '├── '), dir: Array.isArray(node.children) };
+    return [row, ...(row.dir ? flatten(node.children, prefix + (last ? '    ' : '│   '), rowAccent) : [])];
+  });
+
+const rows = flatten(tree.children);
+
+const fileColor = (name) => {
+  const ext = name.startsWith('.env') ? 'env' : name.split('.').pop();
+  return extColors[ext] || 'text-gray-200';
+};
+
+const FolderIcon = ({ className }) => (
+  <svg viewBox="0 0 16 16" aria-hidden="true" className={`w-4 h-4 shrink-0 ${className}`} fill="currentColor">
+    <path d="M1.5 3.5A1.5 1.5 0 0 1 3 2h3.2l1.6 1.6H13a1.5 1.5 0 0 1 1.5 1.5v6.9A1.5 1.5 0 0 1 13 13.5H3A1.5 1.5 0 0 1 1.5 12z" opacity=".9" />
+  </svg>
+);
+
+const FileIcon = ({ className }) => (
+  <svg viewBox="0 0 16 16" aria-hidden="true" className={`w-4 h-4 shrink-0 ${className}`} fill="none" stroke="currentColor" strokeWidth="1.3">
+    <path d="M4 1.75h5.25L12.5 5v9.25H4z" />
+    <path d="M9 1.75V5.3h3.5" />
+  </svg>
+);
+
+const TreeRow = ({ row }) => {
+  const accent = accents[row.accent] || neutral;
+  return (
+    <li className="group flex flex-wrap items-center gap-x-6 rounded-md px-3 py-0.5 hover:bg-white/5 transition-colors">
+      <span className="flex items-center shrink-0 sm:w-[38ch] whitespace-pre">
+        <span className="text-gray-700">{row.guide}</span>
+        {row.dir ? (
+          <>
+            <FolderIcon className={`${accent.text} mr-1.5`} />
+            <span className={`font-semibold ${accent.text}`}>{row.name}/</span>
+          </>
+        ) : (
+          <>
+            <FileIcon className={`${fileColor(row.name)} opacity-70 mr-1.5`} />
+            <span className={fileColor(row.name)}>{row.name}</span>
+          </>
+        )}
+      </span>
+      {row.note && (
+        <span
+          style={{ '--indent': `${row.guide.length + 2}ch` }}
+          className="basis-full pl-(--indent) sm:basis-auto sm:pl-0 text-gray-400 group-hover:text-gray-200 transition-colors"
+        >
+          <span className={`inline-block w-1.5 h-1.5 rounded-full mr-2 align-middle ${accent.dot} opacity-60`} />
+          {row.note}
+        </span>
+      )}
+    </li>
+  );
+};
 
 const WhatYouGet = () => {
   return (
@@ -111,9 +214,37 @@ const WhatYouGet = () => {
         <p className="text-gray-400 text-lg text-center tracking-wide">
           React Router + Express + PostgreSQL via Docker + Prisma, in TypeScript
         </p>
-        <pre className="rounded-2xl p-5 border border-gray-600 bg-black/40 font-mono text-sm sm:text-base text-gray-200 overflow-x-auto leading-relaxed">
-          {tree}
-        </pre>
+        <div className="rounded-2xl border border-white/10 bg-[#0b0f14] overflow-hidden shadow-[0_0_60px_-20px_rgba(34,197,94,0.25)]">
+          <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-3 border-b border-gray-800 bg-white/[0.03]">
+            <div className="flex items-center gap-3">
+              <span className="flex gap-1.5" aria-hidden="true">
+                <span className="w-3 h-3 rounded-full bg-red-500/80" />
+                <span className="w-3 h-3 rounded-full bg-amber-400/80" />
+                <span className="w-3 h-3 rounded-full bg-green-500/80" />
+              </span>
+              <span className="font-mono text-sm text-gray-400">~/{tree.name}</span>
+            </div>
+            <ul className="flex flex-wrap gap-2 text-xs tracking-wide">
+              {Object.values(accents).map((a) => (
+                <li key={a.label} className={`flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 ${a.chip}`}>
+                  <span className={`w-1.5 h-1.5 rounded-full ${a.dot}`} />
+                  {a.label}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="p-3 sm:p-4 overflow-x-auto">
+            <div className="flex items-center px-3 py-0.5 font-mono text-sm sm:text-base">
+              <FolderIcon className="text-green-500 mr-1.5" />
+              <span className="font-semibold text-white">{tree.name}/</span>
+            </div>
+            <ul className="font-mono text-sm sm:text-base leading-relaxed">
+              {rows.map((row) => (
+                <TreeRow key={row.guide + row.name} row={row} />
+              ))}
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -19,7 +19,8 @@ const FabricBg = ({ from, to, reverse = false, intensity = 1 }) => {
       aria-hidden="true"
       className="absolute -inset-y-32 left-1/2 w-screen -translate-x-1/2 -z-10 overflow-hidden pointer-events-none"
       style={{
-        opacity: intensity,
+        // Kept faint site-wide so the fabric stays a mild backdrop.
+        opacity: intensity * 0.4,
         maskImage: 'linear-gradient(to bottom, transparent, black 25%, black 75%, transparent)',
         WebkitMaskImage: 'linear-gradient(to bottom, transparent, black 25%, black 75%, transparent)',
       }}

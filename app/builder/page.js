@@ -57,6 +57,14 @@ const PROVIDERS = {
   sqlite: [{ label: "Local file", value: "local", icon: "sqlite/5FA8D3", desc: "File-based SQLite" }],
 };
 
+// Every provider any database offers, so the full set always shows.
+const ALL_PROVIDERS = [
+  { label: "Supabase", value: "supabase", icon: "supabase", desc: "Hosted Postgres" },
+  { label: "MongoDB Atlas", value: "atlas", icon: "mongodb", desc: "Cloud-hosted MongoDB" },
+  { label: "Docker", value: "docker", icon: "docker", desc: "Local Docker container" },
+  { label: "Local", value: "local", desc: "Self-hosted database" },
+];
+
 const PRISMA = { label: "Prisma", value: "prisma", icon: "prisma/white", desc: "Next-gen TypeScript ORM" };
 const ORMS = {
   postgres: [PRISMA],
@@ -64,6 +72,15 @@ const ORMS = {
   sqlite: [PRISMA],
   mongodb: [PRISMA, { label: "Mongoose", value: "mongoose", icon: "mongoose/C9474A", desc: "Elegant MongoDB modeling" }],
 };
+
+const ALL_ORMS = ORMS.mongodb;
+
+// Marks options outside `available` as disabled, preferring the available entry's label and description.
+const withAvailability = (all, available, reason) =>
+  all.map((option) => {
+    const match = available.find((a) => a.value === option.value);
+    return match || { ...option, disabled: true, desc: reason };
+  });
 
 const PACKAGE_MANAGERS = [
   { label: "npm", value: "npm", icon: "npm", runner: "npx" },
@@ -73,7 +90,7 @@ const PACKAGE_MANAGERS = [
 ];
 
 const FolderGlyph = ({ plus }) => (
-  <svg viewBox="0 0 24 24" className="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+  <svg viewBox="0 0 24 24" className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
     <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
     {plus ? <path d="M12 10.5v5M9.5 13h5" /> : <path d="M9 13.5l2 2 4-4" />}
   </svg>
@@ -107,67 +124,53 @@ const toProjectSlug = (name) =>
 // "." or "./" scaffolds into the current directory, e.g. a freshly cloned repo.
 const isCurrentDir = (name) => /^\.\/?$/.test(name.trim());
 
-function Step({ number, title, note, last, children }) {
+// Card and chip styles match the Supported Stacks section on the home page.
+function Group({ number, title, note, wide, disabled, children }) {
   return (
-    <section className="relative flex gap-4 sm:gap-5">
-      {/* Stepper rail */}
-      <div className="flex flex-col items-center">
-        <div className="w-9 h-9 shrink-0 rounded-full bg-green-500/15 border border-green-500/60 text-green-400 flex items-center justify-center font-sans font-semibold text-sm">
-          {number}
-        </div>
-        {!last && <div className="w-px flex-1 bg-linear-to-b from-green-500/40 to-gray-800 mt-2" />}
-      </div>
-
-      <div className="flex-1 min-w-0 pb-8">
-        <div className="rounded-2xl bg-black/40 backdrop-blur-sm p-4 sm:p-5">
-          <h2 className="text-2xl sm:text-3xl tracking-wider text-gray-100 leading-9">{title}</h2>
-          {note && <p className="font-sans text-sm text-gray-400 mt-1">{note}</p>}
-          <div className="mt-4">{children}</div>
-        </div>
-      </div>
+    <section
+      className={`rounded-lg border bg-black/40 backdrop-blur-sm p-4 font-sans transition-colors ${
+        disabled ? "border-gray-800" : "border-gray-600"
+      } ${wide ? "sm:col-span-2" : ""}`}
+    >
+      <h2 className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.15em] text-gray-400 mb-3">
+        <span className={`tabular-nums ${disabled ? "text-gray-600" : "text-green-500/80"}`}>{String(number).padStart(2, "0")}</span>
+        {title}
+      </h2>
+      {children}
+      {note && <p className={`text-xs mt-3 ${disabled ? "text-amber-400/80" : "text-gray-500"}`}>{note}</p>}
     </section>
   );
 }
 
-function OptionGrid({ options, value, onChange, compact, columns }) {
-  const layout = columns || (compact ? "grid-cols-2 sm:grid-cols-4" : "grid-cols-2 xl:grid-cols-3");
+function ChipPicker({ options, value, onChange, disabled }) {
   return (
-    <div className={`grid gap-3 ${layout}`}>
+    <div className="flex flex-wrap gap-2">
       {options.map((option) => {
-        const selected = option.value === value;
+        const off = disabled || option.disabled;
+        const selected = !off && option.value === value;
         return (
           <button
             key={option.value}
             type="button"
             onClick={() => onChange(option.value)}
+            disabled={off}
             aria-pressed={selected}
-            className={`flex items-center gap-3 text-left font-sans rounded-lg border p-3 transition-colors duration-150 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500/60 ${
-              selected
-                ? "border-green-500/70 bg-green-500/6"
-                : "border-white/8 bg-white/2 hover:border-white/20 hover:bg-white/4"
+            title={option.desc}
+            className={`inline-flex items-center gap-2 text-[13px] px-2.5 py-1.5 rounded-md border transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500/60 ${
+              off
+                ? "border-gray-800 text-gray-600 cursor-not-allowed [&>img]:opacity-30 [&>img]:grayscale"
+                : selected
+                  ? "border-green-500/20 bg-green-300/10 text-green-300 cursor-pointer"
+                  : "border-gray-700 text-gray-300 hover:border-gray-500 hover:text-gray-100 cursor-pointer"
             }`}
           >
-            <span className="w-9 h-9 shrink-0 rounded-md bg-white/5 border border-white/6 flex items-center justify-center">
-              {option.glyph ? (
-                option.glyph
-              ) : option.icon ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={`https://cdn.simpleicons.org/${option.icon}`} alt="" className="w-5 h-5" loading="lazy" />
-              ) : (
-                <span className="text-xs font-medium text-gray-500">{option.label.slice(0, 2)}</span>
-              )}
-            </span>
-            <span className="flex-1 min-w-0">
-              <span className="block truncate text-[15px] font-medium text-gray-100">{option.label}</span>
-              {option.desc && <span className="block truncate text-[13px] text-gray-500 mt-0.5">{option.desc}</span>}
-            </span>
-            <span
-              className={`w-4 h-4 shrink-0 rounded-full border flex items-center justify-center transition-colors ${
-                selected ? "border-green-500" : "border-gray-600"
-              }`}
-            >
-              {selected && <span className="w-2 h-2 rounded-full bg-green-500" />}
-            </span>
+            {option.glyph ? (
+              option.glyph
+            ) : option.icon ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={`https://cdn.simpleicons.org/${option.icon}`} alt="" className="w-4 h-4 shrink-0" loading="lazy" />
+            ) : null}
+            {option.label}
           </button>
         );
       })}
@@ -183,6 +186,7 @@ export default function Builder() {
 
   const hasBackend = config.backend !== "none";
   const hasDatabase = hasBackend && config.database !== "none";
+  const dbLabel = DATABASES.find((d) => d.value === config.database).label;
 
   const update = (key, value) => {
     setConfig((prev) => {
@@ -287,122 +291,149 @@ export default function Builder() {
           </p>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_26rem] xl:grid-cols-[minmax(0,1fr)_30rem] gap-10 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_26rem] xl:grid-cols-[minmax(0,1fr)_30rem] gap-6 items-start">
           {/* Left column - project name and stack choices */}
-          <div>
-            <Step number={next()} title="Where should it go?">
-              <OptionGrid
-                options={LOCATIONS}
-                value={inCurrentDir ? "current" : "new"}
-                onChange={setLocation}
-                columns="grid-cols-1 sm:grid-cols-2"
-              />
-
-              {!inCurrentDir && (
-                <div className="mt-4 font-sans">
-                  <label htmlFor="project-name" className="block text-sm font-medium text-gray-300 mb-2">
-                    Folder name
-                  </label>
-                  <input
-                    id="project-name"
-                    type="text"
-                    value={projectName}
-                    onChange={(e) => setProjectName(e.target.value)}
-                    placeholder="my-app"
-                    spellCheck={false}
-                    autoComplete="off"
-                    className="w-full px-4 py-3 rounded-lg bg-white/2 border border-white/8 text-gray-100 text-base font-mono focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/30 transition"
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <Group number={next()} title="Where should it go?" wide>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex flex-col gap-3">
+                  <ChipPicker
+                    options={LOCATIONS}
+                    value={inCurrentDir ? "current" : "new"}
+                    onChange={setLocation}
                   />
-                  {slug !== projectName.trim() && (
-                    <p className="text-sm text-yellow-400/90 mt-2">
-                      Will be created as <span className="font-mono text-yellow-300">{slug}</span>
-                    </p>
+                  {!inCurrentDir && (
+                    <div>
+                      <label htmlFor="project-name" className="sr-only">
+                        Folder name
+                      </label>
+                      <input
+                        id="project-name"
+                        type="text"
+                        value={projectName}
+                        onChange={(e) => setProjectName(e.target.value)}
+                        placeholder="my-app"
+                        spellCheck={false}
+                        autoComplete="off"
+                        className="w-full px-3 py-2 rounded-md bg-black/40 border border-gray-700 text-gray-100 text-sm font-mono focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/30 transition"
+                      />
+                      {slug !== projectName.trim() && (
+                        <p className="text-xs text-yellow-400/90 mt-2">
+                          Will be created as <span className="font-mono text-yellow-300">{slug}</span>
+                        </p>
+                      )}
+                    </div>
                   )}
                 </div>
-              )}
 
-              {/* Preview of where the files end up */}
-              <div className="mt-4 rounded-lg border border-white/8 bg-black/40 p-4 font-mono text-[13px] leading-6">
-                <p className="font-sans text-xs font-medium uppercase tracking-[0.15em] text-gray-500 mb-2">Result</p>
-                {inCurrentDir ? (
-                  <>
-                    <div className="text-gray-200">
-                      your-repo/ <span className="font-sans text-xs text-gray-500">← run the command here</span>
-                    </div>
-                    <div className="text-gray-500">├── .git</div>
-                    <div className="text-gray-500">├── README.md</div>
-                    <div className="text-green-400">└── app files are added here</div>
-                  </>
-                ) : (
-                  <>
-                    <div className="text-gray-200">
-                      current-folder/ <span className="font-sans text-xs text-gray-500">← run the command here</span>
-                    </div>
-                    <div className="text-green-400">└── {slug}/</div>
-                    <div className="text-green-400/70">{"    "}└── app files go here</div>
-                  </>
-                )}
+                {/* Preview of where the files end up */}
+                <div className="rounded-md border border-gray-700 bg-black/40 px-3 py-2.5 font-mono text-[13px] leading-6">
+                  {inCurrentDir ? (
+                    <>
+                      <div className="text-gray-200">
+                        your-repo/ <span className="font-sans text-xs text-gray-500">← run the command here</span>
+                      </div>
+                      <div className="text-gray-500">├── .git</div>
+                      <div className="text-gray-500">├── README.md</div>
+                      <div className="text-green-400">└── app files are added here</div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="text-gray-200">
+                        current-folder/ <span className="font-sans text-xs text-gray-500">← run the command here</span>
+                      </div>
+                      <div className="text-green-400">└── {slug}/</div>
+                      <div className="text-green-400/70">{"    "}└── app files go here</div>
+                    </>
+                  )}
+                </div>
               </div>
-            </Step>
+            </Group>
 
-            <Step number={next()} title="Language">
-              <OptionGrid options={LANGUAGES} value={config.language} onChange={(v) => update("language", v)} />
-            </Step>
+            <Group number={next()} title="Language">
+              <ChipPicker options={LANGUAGES} value={config.language} onChange={(v) => update("language", v)} />
+            </Group>
 
-            <Step number={next()} title="Frontend">
-              <OptionGrid options={FRONTENDS} value={config.frontend} onChange={(v) => update("frontend", v)} />
-            </Step>
+            <Group number={next()} title="Runtime">
+              <ChipPicker options={RUNTIMES} value={config.runtime} onChange={(v) => update("runtime", v)} />
+            </Group>
 
-            <Step
+            <Group number={next()} title="Frontend" wide>
+              <ChipPicker options={FRONTENDS} value={config.frontend} onChange={(v) => update("frontend", v)} />
+            </Group>
+
+            <Group number={next()} title="Backend">
+              <ChipPicker options={BACKENDS} value={config.backend} onChange={(v) => update("backend", v)} />
+            </Group>
+
+            <Group
               number={next()}
-              title="Backend"
-              note={!hasBackend ? "Frontend-only project, so the database and ORM steps are skipped." : null}
+              title="Database"
+              disabled={!hasBackend}
+              note={!hasBackend ? "Needs a backend. Frontend-only projects have no database." : null}
             >
-              <OptionGrid options={BACKENDS} value={config.backend} onChange={(v) => update("backend", v)} />
-            </Step>
+              <ChipPicker
+                options={DATABASES}
+                value={config.database}
+                onChange={(v) => update("database", v)}
+                disabled={!hasBackend}
+              />
+            </Group>
 
-            <Step number={next()} title="Runtime">
-              <OptionGrid options={RUNTIMES} value={config.runtime} onChange={(v) => update("runtime", v)} />
-            </Step>
+            <Group
+              number={next()}
+              title="Database provider"
+              disabled={!hasDatabase}
+              note={!hasDatabase ? "Pick a database to choose where it runs." : null}
+            >
+              <ChipPicker
+                options={
+                  hasDatabase
+                    ? withAvailability(ALL_PROVIDERS, PROVIDERS[config.database], `Not available with ${dbLabel}`)
+                    : ALL_PROVIDERS
+                }
+                value={config.provider}
+                onChange={(v) => update("provider", v)}
+                disabled={!hasDatabase}
+              />
+            </Group>
 
-            {hasBackend && (
-              <Step number={next()} title="Database">
-                <OptionGrid options={DATABASES} value={config.database} onChange={(v) => update("database", v)} />
-              </Step>
-            )}
+            <Group
+              number={next()}
+              title="ORM"
+              disabled={!hasDatabase}
+              note={
+                !hasDatabase
+                  ? "Pick a database to choose an ORM."
+                  : config.database !== "mongodb"
+                    ? "Prisma supports every SQL database Celtrix offers. Mongoose is MongoDB only."
+                    : null
+              }
+            >
+              <ChipPicker
+                options={
+                  hasDatabase
+                    ? withAvailability(ALL_ORMS, ORMS[config.database], "MongoDB only")
+                    : ALL_ORMS
+                }
+                value={config.orm}
+                onChange={(v) => update("orm", v)}
+                disabled={!hasDatabase}
+              />
+            </Group>
 
-            {hasDatabase && (
-              <>
-                <Step number={next()} title="Database provider">
-                  <OptionGrid
-                    options={PROVIDERS[config.database]}
-                    value={config.provider}
-                    onChange={(v) => update("provider", v)}
-                  />
-                </Step>
-                <Step
-                  number={next()}
-                  title="ORM"
-                  note={config.database !== "mongodb" ? "Prisma supports every SQL database Celtrix offers." : null}
-                >
-                  <OptionGrid options={ORMS[config.database]} value={config.orm} onChange={(v) => update("orm", v)} />
-                </Step>
-              </>
-            )}
-
-            <Step number={next()} title="Package manager" last>
-              <OptionGrid
+            <Group number={next()} title="Package manager" wide>
+              <ChipPicker
                 options={PACKAGE_MANAGERS}
                 value={config.packageManager}
                 onChange={(v) => update("packageManager", v)}
-                compact
               />
-            </Step>
+            </Group>
           </div>
 
           {/* Right column - live command */}
-          <aside className="lg:sticky lg:top-8 flex flex-col gap-4">
-            <div className="rounded-2xl bg-[#111] border border-gray-800 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.8)] overflow-hidden">
+          <aside className="lg:sticky lg:top-8 flex flex-col gap-3">
+            <div className="rounded-lg bg-[#111] border border-gray-600 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.8)] overflow-hidden">
               <div className="h-11 bg-[#1c1c1c] border-b border-gray-800 flex items-center justify-between px-4">
                 <div className="flex gap-2">
                   <div className="w-3 h-3 rounded-full bg-[#FF5F57]" />
@@ -441,8 +472,8 @@ export default function Builder() {
                   onClick={copyCommand}
                   className={`w-full py-3 rounded-xl text-2xl tracking-wider transition-all cursor-pointer ${
                     copied
-                      ? "bg-green-400 text-black"
-                      : "bg-green-500 text-black hover:bg-green-400 hover:shadow-[0_8px_30px_-8px_rgba(34,197,94,0.7)]"
+                      ? "bg-green-300 text-black"
+                      : "bg-green-400 text-black hover:bg-green-300 hover:shadow-[0_8px_30px_-8px_rgba(74,222,128,0.6)]"
                   }`}
                 >
                   {copied ? "Copied!" : "Copy command"}
@@ -453,13 +484,13 @@ export default function Builder() {
               </div>
             </div>
 
-            <div className="rounded-2xl bg-gray-900/60 border border-gray-800 p-5">
-              <h3 className="font-sans text-xs font-medium uppercase tracking-[0.2em] text-gray-500">Your stack</h3>
+            <div className="rounded-lg bg-black/40 border border-gray-600 p-4">
+              <h3 className="font-sans text-xs font-medium uppercase tracking-[0.15em] text-gray-400">Your stack</h3>
               <div className="flex flex-wrap gap-2 mt-3 font-sans">
                 {stackChips.map(([key, option]) => (
                   <span
                     key={key}
-                    className="inline-flex items-center gap-2 text-[13px] px-2.5 py-1.5 rounded-md bg-white/4 border border-white/8 text-gray-200"
+                    className="inline-flex items-center gap-2 text-[13px] px-2.5 py-1.5 rounded-md border border-gray-700 text-gray-200"
                   >
                     {option.icon && (
                       // eslint-disable-next-line @next/next/no-img-element
@@ -481,7 +512,7 @@ export default function Builder() {
           <button
             type="button"
             onClick={copyCommand}
-            className="bangers-regular shrink-0 px-5 py-2.5 rounded-lg bg-green-500 text-black text-xl tracking-wider cursor-pointer"
+            className="bangers-regular shrink-0 px-5 py-2.5 rounded-lg bg-green-400 text-black text-xl tracking-wider cursor-pointer hover:bg-green-300 transition-colors"
           >
             {copied ? "Copied!" : "Copy"}
           </button>
